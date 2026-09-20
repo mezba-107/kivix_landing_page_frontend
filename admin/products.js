@@ -166,14 +166,13 @@
   form.oldPrice.addEventListener("input", recalcDiscount);
 
   function sizesWithStockHTML(p) {
-    if (!p.stock) return (p.sizes || []).join(", ");
-    return (p.sizes || [])
-      .map((s) =>
-        isSizeOutOfStock(p, s)
-          ? `<span style="color:var(--red-deep);text-decoration:line-through">${s}</span>`
-          : `${s} (${getSizeStock(p, s)})`,
-      )
-      .join(", ");
+    const chips = (p.sizes || []).map((s) => {
+      if (!p.stock) return `<span class="admin-size-chip">${s}</span>`;
+      return isSizeOutOfStock(p, s)
+        ? `<span class="admin-size-chip is-out" title="Out of stock">${s}</span>`
+        : `<span class="admin-size-chip">${s}<small>${getSizeStock(p, s)}</small></span>`;
+    });
+    return `<div class="admin-size-list">${chips.join("")}</div>`;
   }
 
   function renderRows() {
@@ -208,13 +207,13 @@
           </div>
         </td>
         <td data-label="Brand">${p.brand || ""}</td>
-        <td data-label="Price" class="cell-name">${formatBDT(p.price)}${
+        <td data-label="Price" class="cell-name"><div class="admin-price-stack"><span>${formatBDT(p.price)}</span>${
           p.oldPrice
             ? `<div class="cell-sub" style="text-decoration:line-through">${formatBDT(p.oldPrice)}</div>`
             : ""
-        }${p.discount ? `<div class="cell-sub" style="color:var(--red-deep);font-weight:700">-${p.discount}%</div>` : ""}</td>
-        <td data-label="Tag">${p.tag ? `<span class="admin-badge approved">${p.tag}</span>` : "—"}${isProductOutOfStock(p) ? `<div style="margin-top:6px"><span class="admin-badge cancelled">Stock Out</span></div>` : ""}</td>
-        <td data-label="Sizes" class="cell-sub">${sizesWithStockHTML(p)}</td>
+        }${p.discount ? `<div class="cell-sub" style="color:var(--red-deep);font-weight:700">-${p.discount}%</div>` : ""}</div></td>
+        <td data-label="Tag"><div class="admin-tag-stack">${p.tag ? `<span class="admin-badge approved">${p.tag}</span>` : "—"}${isProductOutOfStock(p) ? `<span class="admin-badge cancelled">Stock Out</span>` : ""}</div></td>
+        <td data-label="Sizes">${sizesWithStockHTML(p)}</td>
         <td data-label="Actions">
           <div class="admin-row-actions">
             <button type="button" class="admin-btn-sm" data-edit-product="${p.id}">Edit</button>
@@ -303,7 +302,12 @@
     if (delBtn) {
       const product = getProductById(delBtn.dataset.deleteProduct);
       if (!product) return;
-      if (!(await confirmDialog(`Delete "${product.name}"? This can't be undone.`))) return;
+      if (
+        !(await confirmDialog(
+          `Delete "${product.name}"? This can't be undone.`,
+        ))
+      )
+        return;
       try {
         await deleteProduct(product.id);
       } catch (err) {

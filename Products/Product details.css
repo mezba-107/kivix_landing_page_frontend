@@ -3557,7 +3557,6 @@ p {
   border-color: var(--ink);
 }
 
-
 /* Password show/hide toggle — see enablePasswordToggles() in data.js.
    Wraps each <input type="password"> in a .pw-wrap so the eye button
    can sit inside the field without disturbing the .field layout. */
@@ -3592,4 +3591,25 @@ p {
 .pw-toggle-btn svg {
   width: 18px;
   height: 18px;
+}
+
+/* Footer "Contact" link — opens the same Facebook / WhatsApp popover as the
+   nav Contact link, but upwards (the footer sits at the bottom of the page). */
+.footer-contact {
+  display: inline-flex;
+  justify-self: start;
+}
+.footer-contact .contact-popover {
+  top: auto;
+  bottom: calc(100% + 10px);
+  left: 0;
+  right: auto;
+  transform: none;
+}
+.footer-contact .contact-popover-btn,
+.footer-contact .contact-popover-btn:hover {
+  color: var(--text);
+}
+.footer-contact .contact-popover-btn:hover {
+  background: var(--stone);
 }

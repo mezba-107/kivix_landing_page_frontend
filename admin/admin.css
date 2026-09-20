@@ -35,7 +35,7 @@ body.admin-body {
   height: 50px;
   width: auto;
   display: block;
-  margin-left: 24px;
+  /* margin-left: 24px; */
 }
 .admin-sidebar .logo .sub {
   color: #8a8a8a;
@@ -391,6 +391,52 @@ body.admin-body {
 .admin-table .cell-sub {
   font-size: 12px;
   color: var(--muted);
+}
+/* products table — size chips / price / tag stacks */
+.admin-size-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+.admin-size-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--stone, #f4f2ee);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.admin-size-chip small {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--muted);
+  padding-left: 5px;
+  border-left: 1px solid var(--line);
+}
+.admin-size-chip.is-out {
+  color: var(--red-deep);
+  background: #fdf1f1;
+  border-color: rgba(214, 40, 40, 0.3);
+  text-decoration: line-through;
+  font-weight: 500;
+}
+.admin-price-stack,
+.admin-tag-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.admin-tag-stack {
+  align-items: flex-start;
+  gap: 6px;
 }
 .admin-cell-with-thumb {
   display: flex;
@@ -1228,6 +1274,28 @@ body.admin-body {
   }
   .admin-table td select {
     max-width: 150px;
+  }
+  /* products table: stack the value blocks neatly on the right,
+     and let the size chips wrap inside the card instead of
+     spilling out past its edge */
+  .admin-table td > * {
+    min-width: 0;
+  }
+  .admin-price-stack {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 4px 12px;
+  }
+  .admin-tag-stack {
+    align-items: flex-end;
+  }
+  .admin-table td[data-label="Sizes"] {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+    gap: 8px;
   }
 }
 

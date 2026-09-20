@@ -2854,20 +2854,19 @@ p {
      therefore the background photo box, which stretches to match)
      much taller than it needed to be, so the photo got cropped far
      more aggressively than on desktop. */
+  /* All five badges (incl. "Trusted Shopping" and "Best Price") must be
+     visible without swiping — a one-line swipe row hid the last two off
+     the right edge. Let them wrap, kept compact so the hero stays short. */
   .hero-features {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-  }
-  .hero-features::-webkit-scrollbar {
-    display: none;
+    flex-wrap: wrap;
+    overflow: visible;
+    padding-bottom: 0;
   }
   .hero-feature {
     flex: none;
-    padding: 11px 14px;
+    padding: 8px 12px;
     font-size: 11.5px;
+    line-height: 1.3;
   }
   .promo-copy h2 {
     font-size: 34px;
@@ -3003,8 +3002,10 @@ p {
     gap: 8px;
   }
   .hero-feature {
-    padding: 10px 12px;
+    padding: 7px 10px;
     font-size: 11px;
+    line-height: 1.3;
+    gap: 7px;
   }
   .hero-feature svg {
     width: 16px;
@@ -3593,4 +3594,24 @@ p {
 .pw-toggle-btn svg {
   width: 18px;
   height: 18px;
+}
+
+/* Footer "Contact" link — opens the same Facebook / WhatsApp popover as the
+   nav Contact link, but upwards (the footer sits at the bottom of the page). */
+.footer-contact {
+  display: inline-flex;
+  justify-self: start;
+}
+.footer-contact .contact-popover {
+  top: auto;
+  bottom: calc(100% + 10px);
+  left: 0;
+  transform: none;
+}
+.footer-contact .contact-popover-btn,
+.footer-contact .contact-popover-btn:hover {
+  color: var(--text);
+}
+.footer-contact .contact-popover-btn:hover {
+  background: var(--stone);
 }
