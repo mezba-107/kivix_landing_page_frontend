@@ -2147,10 +2147,13 @@ p {
 
 .checkout-grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
   gap: 32px;
   align-items: start;
   padding: 44px 0 72px;
+}
+.checkout-grid > * {
+  min-width: 0;
 }
 .checkout-card {
   border: 1px solid var(--line);
@@ -2181,7 +2184,7 @@ p {
 }
 .field-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 .field-full {
@@ -2202,6 +2205,9 @@ p {
 .field input,
 .field select,
 .field textarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   font-family: inherit;
   font-size: 14px;
   font-weight: 400;
@@ -2321,9 +2327,12 @@ p {
 }
 .summary-item {
   display: grid;
-  grid-template-columns: 56px 1fr auto;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
+}
+.summary-item > * {
+  min-width: 0;
 }
 .summary-item-thumb {
   width: 56px;
@@ -2335,6 +2344,7 @@ p {
 .summary-item-name {
   font-size: 13.5px;
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 .summary-item-meta {
   font-size: 12px;
@@ -2348,10 +2358,15 @@ p {
 .summary-row {
   display: flex;
   justify-content: space-between;
+  gap: 12px;
   font-size: 14px;
   color: var(--text-2);
   padding: 11px 0;
   border-top: 1px solid var(--line);
+}
+.summary-row > span:last-child {
+  text-align: right;
+  flex-shrink: 0;
 }
 .summary-row.total {
   font-size: 20px;
@@ -2369,7 +2384,9 @@ p {
   margin-bottom: 4px;
 }
 .coupon-row input {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
   padding: 11px 14px;
   border: 1.5px solid var(--line);
   border-radius: var(--radius-sm);
@@ -2382,6 +2399,7 @@ p {
   border-color: var(--red-deep);
 }
 .coupon-row .btn {
+  flex: none;
   padding: 0 18px;
   font-size: 12.5px;
   white-space: nowrap;
@@ -2808,13 +2826,13 @@ p {
     grid-template-columns: 1fr 1fr;
   }
   .checkout-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .summary-card {
     position: static;
   }
   .field-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
