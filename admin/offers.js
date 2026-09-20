@@ -76,12 +76,45 @@
   /* ---------------- Popup banners ---------------- */
   const list = document.querySelector("[data-offer-list]");
   const countEl = document.querySelector("[data-offer-count]");
-  const input = document.querySelector("[data-offer-input]");
+  const newPc = document.querySelector("[data-new-pc]");
+  const newMobile = document.querySelector("[data-new-mobile]");
+  const newPcPrev = document.querySelector("[data-new-pc-preview]");
+  const newMobilePrev = document.querySelector("[data-new-mobile-preview]");
+  const addBtn = document.querySelector("[data-add-offer]");
+
+  const thumbBox = (src, w, h) =>
+    src
+      ? `<img src="${src}" alt="" style="width:${w}px;height:${h}px;object-fit:cover;border-radius:8px;border:1.5px solid var(--line)" />`
+      : `<div style="width:${w}px;height:${h}px;display:flex;align-items:center;justify-content:center;font-size:11px;text-align:center;color:var(--muted);border:1.5px solid var(--line);border-radius:8px;padding:4px">No mobile image<br/>(PC used)</div>`;
+  function preview(inp, box, w, h) {
+    const f = inp.files && inp.files[0];
+    box.innerHTML = f ? thumbBox(URL.createObjectURL(f), w, h) : "";
+  }
+  newPc.addEventListener("change", () => preview(newPc, newPcPrev, 130, 82));
+  newMobile.addEventListener("change", () =>
+    preview(newMobile, newMobilePrev, 62, 82),
+  );
 
   function offerCardHTML(b) {
     return `
       <div class="admin-offer-card" data-offer-card="${b.id}">
-        <img src="${b.image}" alt="Offer banner" />
+        <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap">
+          <div>
+            <div style="font-size:11.5px;margin-bottom:4px">PC</div>
+            ${thumbBox(b.image, 130, 82)}
+            <label class="admin-file-btn admin-file-btn-inline" style="margin-top:6px">Replace PC
+              <input type="file" accept="image/*" hidden data-offer-replace="image" data-id="${b.id}" />
+            </label>
+          </div>
+          <div>
+            <div style="font-size:11.5px;margin-bottom:4px">Mobile</div>
+            ${thumbBox(b.mobileImage, 62, 82)}
+            <label class="admin-file-btn admin-file-btn-inline" style="margin-top:6px">${b.mobileImage ? "Replace" : "Add"} Mobile
+              <input type="file" accept="image/*" hidden data-offer-replace="mobileImage" data-id="${b.id}" />
+            </label>
+            ${b.mobileImage ? `<button type="button" class="admin-file-btn admin-file-btn-inline" style="margin-top:6px" data-clear-offer-mobile="${b.id}">Remove Mobile</button>` : ""}
+          </div>
+        </div>
         <div class="admin-offer-card-body">
           <input
             type="text"
@@ -112,31 +145,51 @@
     list.innerHTML = OFFER_BANNERS.map(offerCardHTML).join("");
   }
 
-  input.addEventListener("change", async (e) => {
-    const files = Array.from(e.target.files || []);
-    input.value = "";
-    if (!files.length) return;
-    const room = 5 - OFFER_BANNERS.length;
-    if (room <= 0) {
+  addBtn.addEventListener("click", async () => {
+    const pcFile = newPc.files && newPc.files[0];
+    const mobFile = newMobile.files && newMobile.files[0];
+    if (!pcFile) {
+      showToast("Please choose a PC image first");
+      return;
+    }
+    if (OFFER_BANNERS.length >= 5) {
       showToast("You can add up to 5 offer banners");
       return;
     }
-    const toAdd = files.slice(0, room);
-    if (files.length > toAdd.length) {
-      showToast(`Only added ${toAdd.length} banner(s) — 5 max`);
+    addBtn.disabled = true;
+    addBtn.textContent = "Uploading…";
+    try {
+      const [image, mobileImage] = await Promise.all([
+        uploadImage(pcFile, "offer-banners"),
+        mobFile ? uploadImage(mobFile, "offer-banners") : Promise.resolve(""),
+      ]);
+      await addOfferBanner({ image, mobileImage, link: "", active: true });
+      newPc.value = "";
+      newMobile.value = "";
+      newPcPrev.innerHTML = "";
+      newMobilePrev.innerHTML = "";
+      render();
+      showToast("Offer banner added");
+    } catch (err) {
+      showToast(err.message || "Couldn't add that banner");
     }
-    for (const file of toAdd) {
-      try {
-        const url = await uploadImage(file, "offer-banners");
-        await addOfferBanner({ image: url, link: "", active: true });
-      } catch (err) {
-        showToast(err.message || "Couldn't upload one of those images");
-      }
-    }
-    render();
+    addBtn.disabled = false;
+    addBtn.textContent = "Add Banner";
   });
 
   list.addEventListener("click", async (e) => {
+    const clr = e.target.closest("[data-clear-offer-mobile]");
+    if (clr) {
+      try {
+        await updateOfferBanner(clr.dataset.clearOfferMobile, {
+          mobileImage: "",
+        });
+      } catch (err) {
+        showToast(err.message || "Couldn't remove mobile image");
+      }
+      render();
+      return;
+    }
     const btn = e.target.closest("[data-remove-offer]");
     if (!btn) return;
     try {
@@ -150,6 +203,22 @@
   });
 
   list.addEventListener("change", async (e) => {
+    const rep = e.target.closest("[data-offer-replace]");
+    if (rep) {
+      if (!rep.files[0]) return;
+      showToast("Uploading image…");
+      try {
+        const url = await uploadImage(rep.files[0], "offer-banners");
+        await updateOfferBanner(rep.dataset.id, {
+          [rep.dataset.offerReplace]: url,
+        });
+        showToast("Image updated");
+      } catch (err) {
+        showToast(err.message || "Couldn't update that image");
+      }
+      render();
+      return;
+    }
     const linkInput = e.target.closest("[data-offer-link]");
     if (linkInput) {
       try {

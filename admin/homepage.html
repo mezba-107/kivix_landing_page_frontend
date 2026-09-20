@@ -258,26 +258,66 @@
                 max-width: 640px;
               "
             >
-              These images rotate in the circular hero banner on the homepage.
-              Add as many as you like — leave this list empty to use the site's
-              default illustration instead.
+              Each slide has a <b>PC image</b> (wide, e.g. 1920&times;680) and an
+              optional <b>Mobile image</b> (portrait/square, e.g. 900&times;1100).
+              PC visitors only see the PC image; phones only see the Mobile
+              image (if you skip it, the PC image is used). Leave the list empty
+              to use the site's default illustration.
             </p>
             <div style="padding: 0 22px 22px">
               <div
                 class="admin-gallery-grid"
                 data-hero-grid
-                style="gap: 14px"
+                style="gap: 14px; flex-direction: column"
               ></div>
-              <label class="admin-file-btn admin-file-btn-inline">
-                + Add Hero Image
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  data-hero-input
-                  hidden
-                />
-              </label>
+
+              <div
+                style="
+                  border: 1.5px dashed var(--line);
+                  border-radius: 12px;
+                  padding: 16px;
+                  max-width: 640px;
+                "
+              >
+                <div style="font-weight: 600; margin-bottom: 12px">
+                  Add new slide
+                </div>
+                <div style="display: flex; gap: 22px; flex-wrap: wrap">
+                  <div>
+                    <div style="font-size: 12.5px; margin-bottom: 6px">
+                      PC image (required)
+                    </div>
+                    <div data-new-pc-preview></div>
+                    <label class="admin-file-btn admin-file-btn-inline">
+                      Choose PC image
+                      <input type="file" accept="image/*" data-new-pc hidden />
+                    </label>
+                  </div>
+                  <div>
+                    <div style="font-size: 12.5px; margin-bottom: 6px">
+                      Mobile image (optional)
+                    </div>
+                    <div data-new-mobile-preview></div>
+                    <label class="admin-file-btn admin-file-btn-inline">
+                      Choose Mobile image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        data-new-mobile
+                        hidden
+                      />
+                    </label>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-add-slide
+                  style="margin-top: 16px; padding: 9px 22px; font-size: 13px"
+                >
+                  Add Slide
+                </button>
+              </div>
             </div>
           </div>
         </div>

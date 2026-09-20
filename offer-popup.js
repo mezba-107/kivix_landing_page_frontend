@@ -17,7 +17,7 @@ function buildOfferPopup(banners) {
   overlay.setAttribute("data-offer-popup-overlay", "");
 
   function slideHTML(b) {
-    const img = `<img src="${b.image}" alt="Offer" />`;
+    const img = `<picture>${b.mobileImage ? `<source media="(max-width: 640px)" srcset="${b.mobileImage}" />` : ""}<img src="${b.image}" alt="Offer" /></picture>`;
     return b.link
       ? `<a class="offer-popup-link" href="${b.link}">${img}</a>`
       : img;
@@ -30,8 +30,8 @@ function buildOfferPopup(banners) {
       ${
         banners.length > 1
           ? `
-        <button type="button" class="offer-popup-nav prev" data-offer-popup-prev aria-label="Previous offer">&#8249;</button>
-        <button type="button" class="offer-popup-nav next" data-offer-popup-next aria-label="Next offer">&#8250;</button>
+        <button type="button" class="offer-popup-nav prev" data-offer-popup-prev aria-label="Previous offer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button type="button" class="offer-popup-nav next" data-offer-popup-next aria-label="Next offer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
         <div class="offer-popup-dots">
           ${banners.map((_, i) => `<span${i === 0 ? ' class="is-active"' : ""}></span>`).join("")}
         </div>`

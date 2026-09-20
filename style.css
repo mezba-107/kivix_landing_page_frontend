@@ -776,6 +776,7 @@ p {
 .hero-photo-backdrop {
   position: absolute;
   inset: -24px;
+  background-image: var(--pc-img);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -803,6 +804,20 @@ p {
   user-select: none;
 }
 
+/* mobile gets its own image (falls back to the PC one if none uploaded) */
+@media (max-width: 720px) {
+  .hero-photo-backdrop {
+    background-image: var(--mob-img);
+  }
+}
+.hero-slide picture {
+  display: block;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
 /* prev/next arrow controls */
 .hero-slide-nav {
   position: absolute;
@@ -815,21 +830,25 @@ p {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(10, 10, 11, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #fff;
+  background: #fff;
+  border: 2px solid #fff;
+  color: #0b0b0c;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
   cursor: pointer;
   transition:
     background-color 0.25s ease,
-    border-color 0.25s ease;
+    border-color 0.25s ease,
+    color 0.25s ease;
 }
 .hero-slide-nav svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
+  stroke-width: 3;
 }
 .hero-slide-nav:hover {
   background: var(--red);
   border-color: var(--red);
+  color: #fff;
 }
 .hero-slide-nav.prev {
   left: 28px;
@@ -2967,12 +2986,12 @@ p {
     padding: 64px 0;
   }
   .hero-slide-nav {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
   }
   .hero-slide-nav svg {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
   }
   .eyebrow {
     font-size: 12px;
@@ -3416,6 +3435,9 @@ p {
 .offer-popup-link {
   display: block;
 }
+.offer-popup picture {
+  display: block;
+}
 .offer-popup img {
   width: 100%;
   max-height: 88vh;
@@ -3455,9 +3477,10 @@ p {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: none;
-  background: rgba(11, 11, 12, 0.55);
-  color: #fff;
+  border: 2px solid #fff;
+  background: #fff;
+  color: #0b0b0c;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
   font-size: 20px;
   cursor: pointer;
   display: flex;
@@ -3468,8 +3491,14 @@ p {
     background-color 0.2s ease,
     transform 0.2s ease;
 }
+.offer-popup-nav svg {
+  width: 22px;
+  height: 22px;
+}
 .offer-popup-nav:hover {
   background: var(--red-deep);
+  border-color: var(--red-deep);
+  color: #fff;
   transform: translateY(-50%) scale(1.08);
 }
 .offer-popup-nav.prev {
@@ -3517,6 +3546,10 @@ p {
   .offer-popup-nav {
     width: 38px;
     height: 38px;
+  }
+  .offer-popup-nav svg {
+    width: 20px;
+    height: 20px;
   }
 }
 

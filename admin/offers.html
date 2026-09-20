@@ -339,6 +339,9 @@
               Active banners pop up on every page load/refresh on the
               storefront. Add 1–5 banners — an optional link makes the banner
               clickable.
+              Each banner can have a separate <b>PC image</b> and
+              <b>Mobile image</b> — phones show the Mobile image (or the PC
+              image if you skip it).
             </p>
             <div
               class="admin-offer-list"
@@ -346,16 +349,53 @@
               style="padding: 0 22px 10px; display: grid; gap: 14px"
             ></div>
             <div style="padding: 0 22px 22px">
-              <label class="admin-file-btn">
-                + Add Offer Banner
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  data-offer-input
-                  hidden
-                />
-              </label>
+              <div
+                style="
+                  border: 1.5px dashed var(--line);
+                  border-radius: 12px;
+                  padding: 16px;
+                  max-width: 640px;
+                "
+              >
+                <div style="font-weight: 600; margin-bottom: 12px">
+                  Add new offer banner
+                </div>
+                <div style="display: flex; gap: 22px; flex-wrap: wrap">
+                  <div>
+                    <div style="font-size: 12.5px; margin-bottom: 6px">
+                      PC image (required)
+                    </div>
+                    <div data-new-pc-preview></div>
+                    <label class="admin-file-btn admin-file-btn-inline">
+                      Choose PC image
+                      <input type="file" accept="image/*" data-new-pc hidden />
+                    </label>
+                  </div>
+                  <div>
+                    <div style="font-size: 12.5px; margin-bottom: 6px">
+                      Mobile image (optional)
+                    </div>
+                    <div data-new-mobile-preview></div>
+                    <label class="admin-file-btn admin-file-btn-inline">
+                      Choose Mobile image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        data-new-mobile
+                        hidden
+                      />
+                    </label>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  data-add-offer
+                  style="margin-top: 16px; padding: 9px 22px; font-size: 13px"
+                >
+                  Add Banner
+                </button>
+              </div>
             </div>
           </div>
         </div>

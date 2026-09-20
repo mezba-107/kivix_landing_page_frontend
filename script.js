@@ -373,7 +373,7 @@ function initHeroSlideshow() {
       ${(uploaded || tones)
         .map((item, i) => {
           const inner = uploaded
-            ? `<div class="hero-photo-backdrop" style="background-image:url('${item.image}')"></div><img src="${item.image}" alt="KI-VIX hero" class="hero-photo" draggable="false" />`
+            ? `<div class="hero-photo-backdrop" style="--pc-img:url('${item.image}');--mob-img:url('${item.mobileImage || item.image}')"></div><picture>${item.mobileImage ? `<source media="(max-width: 720px)" srcset="${item.mobileImage}" />` : ""}<img src="${item.image}" alt="KI-VIX hero" class="hero-photo" draggable="false" /></picture>`
             : sneakerSVG(item, "0 0 320 200");
           const bg = uploaded ? "" : ` style="background:${item}14"`;
           return `<div class="hero-slide${i === 0 ? " is-active" : ""}"${bg}>${inner}</div>`;

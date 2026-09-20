@@ -166,7 +166,36 @@ function apiCustomer(path, opts = {}) {
    its URL. folder = "products" | "hero-slides" | "offer-banners" |
    "avatars". Works with either an admin or a logged-in customer token
    (avatars), whichever is present. */
+/* Shrinks big photos in the browser BEFORE upload (max 1600px wide, WebP),
+   so a 5-10MB image becomes ~100-300KB. This is what makes uploads fast.
+   Falls back to the original file if anything goes wrong. */
+async function compressImage(file, maxWidth = 1600, quality = 0.85) {
+  try {
+    if (!file || !/^image\/(jpeg|png|webp)$/.test(file.type)) return file;
+    if (file.size < 200 * 1024) return file; // already small
+    const bmp = await createImageBitmap(file);
+    const scale = Math.min(1, maxWidth / bmp.width);
+    const w = Math.round(bmp.width * scale);
+    const h = Math.round(bmp.height * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    canvas.getContext("2d").drawImage(bmp, 0, 0, w, h);
+    if (bmp.close) bmp.close();
+    const blob = await new Promise((res) =>
+      canvas.toBlob(res, "image/webp", quality),
+    );
+    if (!blob || blob.type !== "image/webp" || blob.size >= file.size)
+      return file;
+    const name = (file.name || "image").replace(/\.[^.]+$/, "") + ".webp";
+    return new File([blob], name, { type: "image/webp" });
+  } catch (e) {
+    return file;
+  }
+}
+
 async function uploadImage(file, folder) {
+  file = await compressImage(file);
   const fd = new FormData();
   fd.append("image", file);
   const token = getAdminToken() || getCustomerToken();
@@ -839,6 +868,16 @@ async function addHeroSlide(slide) {
   });
   HERO_SLIDES.push(created);
   return created;
+}
+async function updateHeroSlide(id, patch) {
+  const updated = await apiAdmin(`/hero-slides/${id}`, {
+    method: "PUT",
+    body: patch,
+  });
+  HERO_SLIDES = HERO_SLIDES.map((s) =>
+    String(s.id) === String(id) ? updated : s,
+  );
+  return updated;
 }
 async function deleteHeroSlide(id) {
   await apiAdmin(`/hero-slides/${id}`, { method: "DELETE" });
