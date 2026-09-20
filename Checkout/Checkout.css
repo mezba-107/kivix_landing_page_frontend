@@ -46,6 +46,8 @@ html {
   scroll-behavior: smooth;
   overflow-x: hidden;
   width: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 body {
   margin: 0;
@@ -2244,21 +2246,26 @@ p {
 }
 .zone-option-info {
   flex: 1;
+  min-width: 0;
 }
 .zone-option-info .name {
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
+  overflow-wrap: anywhere;
 }
 .zone-option-info .sub {
   font-size: 12.5px;
   color: var(--muted);
   font-weight: 400;
+  overflow-wrap: anywhere;
 }
 .zone-option-fee {
   font-size: 14px;
   font-weight: 700;
   font-family: var(--font-display);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .payment-option {
   display: flex;

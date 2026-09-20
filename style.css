@@ -46,6 +46,8 @@ html {
   scroll-behavior: smooth;
   overflow-x: hidden;
   width: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 body {
   margin: 0;
@@ -636,6 +638,17 @@ p {
 .hero .container {
   position: relative;
   z-index: 2;
+  /* This box has no background, but its (invisible) box still spans
+     almost the full hero width on mobile — which was sitting on top
+     of the hero-slide-nav prev/next arrows and swallowing taps meant
+     for them. Turning off pointer-events here lets taps in any empty
+     area pass straight through to the slideshow underneath, and we
+     re-enable it only on the actual clickable bits below. */
+  pointer-events: none;
+}
+.hero .container a,
+.hero .container button {
+  pointer-events: auto;
 }
 .eyebrow {
   display: inline-flex;
@@ -2817,7 +2830,23 @@ p {
   .hero h1 {
     font-size: 56px;
   }
+  /* Keep the feature badges on one swipeable row instead of wrapping
+     to several rows — wrapping was making the whole hero section (and
+     therefore the background photo box, which stretches to match)
+     much taller than it needed to be, so the photo got cropped far
+     more aggressively than on desktop. */
+  .hero-features {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .hero-features::-webkit-scrollbar {
+    display: none;
+  }
   .hero-feature {
+    flex: none;
     padding: 11px 14px;
     font-size: 11.5px;
   }
@@ -2844,14 +2873,49 @@ p {
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
   }
+  /* Stack Add to Cart / Buy Now full-width as soon as the grid goes
+     2-column (was previously only happening under 480px, which left
+     narrower 2-column cards between 481-720px with the two buttons
+     squeezed side-by-side and the label text spilling out). */
+  .product-card .card-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .product-card .add-to-cart-btn,
+  .product-card .buy-now-btn {
+    width: 100%;
+    font-size: 12.5px;
+    padding: 11px 8px;
+  }
+  .product-card .add-to-cart-btn {
+    border-color: var(--red);
+    color: var(--red);
+  }
   .section {
     padding: 48px 0;
   }
   .section-head h2 {
     font-size: 30px;
   }
+  /* Limited Time Offer carousel — keep the prev/next arrows on mobile
+     instead of hiding them, just move them from just-outside-the-card
+     (where there's no room on a narrow screen) to sit just inside the
+     card edges instead, so they stay reachable and don't overflow. */
   .carousel-arrow {
-    display: none;
+    width: 34px;
+    height: 34px;
+    background: rgba(10, 10, 11, 0.55);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  .carousel-arrow svg {
+    width: 15px;
+    height: 15px;
+  }
+  .carousel-arrow.prev {
+    left: 6px;
+  }
+  .carousel-arrow.next {
+    right: 6px;
   }
   .pdp {
     grid-template-columns: 1fr;
