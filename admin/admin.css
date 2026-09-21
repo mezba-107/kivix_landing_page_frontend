@@ -1158,6 +1158,10 @@ body.admin-body {
   .admin-sidebar.open {
     left: 0;
   }
+  .admin-sidebar .logo .mark-img {
+    margin-left: 0;
+    margin-right: 24px;
+  }
   .admin-main {
     margin-left: 0;
   }
